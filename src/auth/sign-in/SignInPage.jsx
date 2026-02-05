@@ -1,11 +1,14 @@
-import React from 'react'
+import { SignIn } from "@clerk/clerk-react";
 
-const signInPage = () => {
+const SignInPage = () => {
   return (
-    <div>
-      hii from signin
-    </div>
-  )
-}
+    <SignIn
+      routing="path"
+      path="/auth/sign-in"
+      signUpUrl="/auth/sign-up"
+      redirectUrl="/"
+    />
+  );
+};
 
-export default signInPage
+export default SignInPage;

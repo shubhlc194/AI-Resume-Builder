@@ -1,21 +1,56 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { createBrowserRouter } from 'react-router-dom'
-import { RouterProvider } from 'react-router'
-import Index from './auth/sign-in/SignInPage.jsx'
-const router=createBrowserRouter([{
-  path:'/',
-  Element:<App/>
-},{
-  path:"/auth/sign-in",
-  element:<signInPage/>
-}
-])
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ClerkProvider } from "@clerk/clerk-react";
+import SsoCallback from "./auth/sign-in/SsoCallback.jsx";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+
+import App from "./App.jsx";
+import "./index.css";
+
+import SignInPage from "./auth/sign-in/SignInPage.jsx";
+import Home from "./home/index.jsx";
+import DashBoard from "./dashboard/index.jsx";
+
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Clerk Publishable Key");
+}
+
+const router = createBrowserRouter([
+  {
+    element: <App />,
+    children: [
+      // {
+      //   path: "/",
+      //   element: <Home />,
+      // },
+      {
+        path: "/dashboard",
+        element: <DashBoard />,
+      },
+    ],
+  },
+    {
+        path: "/",
+        element: <Home />,
+      },
+  {
+    path: "/auth/sign-in",
+    element: <SignInPage />,
+  },
+  {
+    path: "/auth/sign-in/sso-callback",
+    element: <SsoCallback />,
+  },
+]);
+
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-   <RouterProvider router={router}/>
-  </React.StrictMode>,
-)
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+      <RouterProvider router={router} />
+    </ClerkProvider>
+  </React.StrictMode>
+);
