@@ -18,8 +18,11 @@ const CreateNewResume = (data) =>
 const GetUserResumes = () =>
   axiosClient.get("/user-resumes");
 
-
+const updateResumeDetail = (id, data) => {
+  return axiosClient.put(`/user-resumes/${id}`, data);
+};
 export default {
   CreateNewResume,
   GetUserResumes,
+  updateResumeDetail
 };

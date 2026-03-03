@@ -1,12 +1,12 @@
 import React from "react";
-import Header from "../components/custom/Header";
+// import Header from "../components/custom/Header";
 import { Link } from "react-router-dom";
 import { Sparkles, FileText, LayoutTemplate } from "lucide-react";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-indigo-50">
-      <Header />
+      {/* <Header /> */}
 
       {/* HERO SECTION */}
       <div className="max-w-6xl mx-auto px-6 pt-20 text-center">

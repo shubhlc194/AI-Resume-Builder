@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const ResumeCardItem = ({ resume }) => {
   return (
-    <Link to={`/resume/${resume.id}`}>
+    <Link to={`/dashboard/resume/${resume.documentId}/edit`}>
       <div className="flex flex-col items-center group cursor-pointer">
 
         {/* CARD */}
