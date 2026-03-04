@@ -1,18 +1,17 @@
 import React from "react";
-// import Header from "../components/custom/Header";
 import { Link } from "react-router-dom";
 import { Sparkles, FileText, LayoutTemplate } from "lucide-react";
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-indigo-50">
-      {/* <Header /> */}
 
       {/* HERO SECTION */}
       <div className="max-w-6xl mx-auto px-6 pt-20 text-center">
 
         <h1 className="text-5xl font-bold text-gray-900 leading-tight">
-          Build Your Resume with <span className="text-indigo-600">AI Power</span>
+          Build Your Resume with{" "}
+          <span className="text-indigo-600">AI Power</span>
         </h1>
 
         <p className="mt-6 text-lg text-gray-600 max-w-2xl mx-auto">
@@ -20,17 +19,13 @@ const Home = () => {
           modern templates, and real-time editing.
         </p>
 
-        {/* CTA BUTTONS */}
-        <div className="mt-10 flex justify-center gap-4">
+        {/* ✅ Only Get Started Button */}
+        <div className="mt-10 flex justify-center">
           <Link to="/dashboard">
-            <button className="px-8 py-3 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition">
+            <button className="px-10 py-3 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition shadow-md hover:shadow-lg">
               Get Started
             </button>
           </Link>
-
-          <button className="px-8 py-3 rounded-lg border border-gray-300 font-medium hover:bg-gray-100 transition">
-            View Templates
-          </button>
         </div>
 
         {/* HERO IMAGE PLACEHOLDER */}

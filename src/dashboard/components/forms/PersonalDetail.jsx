@@ -1,9 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { ResumeInfoContext } from "../../../context/ResumeInfoContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import GlobalApi from "../../../../service/GlobalApi";
+import { toast } from "sonner";
 
 function PersonalDetail({ enableNext }) {
   const params = useParams();
@@ -12,13 +13,19 @@ function PersonalDetail({ enableNext }) {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log("Params:", params);
-  }, []);
+  const requiredFields = [
+    "firstName",
+    "lastName",
+    "jobTitle",
+    "address",
+    "phone",
+    "email",
+  ];
 
   const handleInput = (e) => {
     const { name, value } = e.target;
 
+    // Whenever user edits → disable Next
     enableNext(false);
 
     setFormData((prev) => ({
@@ -34,21 +41,28 @@ function PersonalDetail({ enableNext }) {
 
   const onSave = async (e) => {
     e.preventDefault();
+
+    // ✅ Validate all required fields
+    const isFormComplete = requiredFields.every(
+      (field) => formData[field] && formData[field].trim() !== ""
+    );
+
+    if (!isFormComplete) {
+     toast.error("Please fill all fields before saving.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const data = {
+      await GlobalApi.updateResumeDetail(params.resumeId, {
         data: formData,
-      };
+      });
 
-      const resp = await GlobalApi.updateResumeDetail(
-        params.resumeId,
-        data
-      );
-
-      console.log("Updated:", resp);
-
+      // ✅ Enable Next ONLY after successful save
+      toast.success("Details saved successfully!");
       enableNext(true);
+
     } catch (err) {
       console.error("Update error:", err);
     } finally {

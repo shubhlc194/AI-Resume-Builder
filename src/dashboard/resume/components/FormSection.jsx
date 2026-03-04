@@ -2,18 +2,11 @@ import React, { useState } from "react";
 import PersonalDetail from "@/dashboard/components/forms/PersonalDetail";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, LayoutGridIcon } from "lucide-react";
-
-const SummaryForm = () => (
-  <div className="p-6 bg-white rounded-xl shadow">Summary Form</div>
-);
-
-const ExperienceForm = () => (
-  <div className="p-6 bg-white rounded-xl shadow">Experience Form</div>
-);
+import Summery from "@/dashboard/components/forms/Summery";
 
 function FormSection() {
   const [activeFormIndex, setActiveFormIndex] = useState(1);
-  const[enableNext,setEnableNext]=useState(false);
+  const [enableNext, setEnableNext] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -28,9 +21,9 @@ function FormSection() {
 
         <div className="flex items-center gap-2">
 
+          {/* BACK BUTTON */}
           {activeFormIndex > 1 && (
             <Button
-            disabled={!enableNext}
               variant="outline"
               size="icon"
               onClick={() => setActiveFormIndex(activeFormIndex - 1)}
@@ -39,9 +32,14 @@ function FormSection() {
             </Button>
           )}
 
+          {/* ✅ NEXT BUTTON (Fixed) */}
           <Button
             size="sm"
-            onClick={() => setActiveFormIndex(activeFormIndex + 1)}
+            disabled={!enableNext}
+            onClick={() => {
+              setActiveFormIndex(activeFormIndex + 1);
+              setEnableNext(false); // reset for next form
+            }}
             className="flex items-center gap-2"
           >
             Next
@@ -52,11 +50,14 @@ function FormSection() {
       </div>
 
       {/* FORM SWITCHING */}
-      {activeFormIndex === 1 && <PersonalDetail enableNext={(v)=>{
-        setEnableNext(v)
-      }} />}
-      {/* {activeFormIndex === 2 && <SummaryForm />}
-      {activeFormIndex === 3 && <ExperienceForm />} */}
+      {/* FORM SWITCHING */}
+{activeFormIndex === 1 && (
+  <PersonalDetail enableNext={setEnableNext} />
+)}
+{activeFormIndex === 2 && (
+  <Summery enableNext={setEnableNext} />
+)}
+     
 
     </div>
   );
