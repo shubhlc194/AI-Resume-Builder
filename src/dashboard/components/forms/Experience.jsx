@@ -16,7 +16,7 @@ const formfield = {
   workSummery: ''
 }
 
-function Experience() {
+function Experience({ enableNext }) { 
   const [experienceList, setExperienceList] = useState([formfield])
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
   const [loading, setLoading] = useState(false)
@@ -34,6 +34,7 @@ function Experience() {
       ...resumeInfo,
       experience: newList
     })
+    enableNext(false) // ✅ re-lock on edit
   }
 
   const handleRichTextEditor = (value, name, index) => {
@@ -47,10 +48,12 @@ function Experience() {
       ...resumeInfo,
       experience: newList
     })
+    enableNext(false) 
   }
 
   const addNewExperience = () => {
     setExperienceList([...experienceList, { ...formfield }])
+    enableNext(false) 
   }
 
   const removeExperience = (index) => {
@@ -60,26 +63,38 @@ function Experience() {
       ...resumeInfo,
       experience: newList
     })
+    enableNext(false) // ✅ re-lock on remove
   }
 
-  const onSave = () => {
-    setLoading(true)
-    const data = {
-      data: {
-        experience: experienceList.map(({ id, ...rest }) => rest)
-      }
+ const onSave = () => {
+  setLoading(true)
+  const data = {
+    data: {
+      Experience: experienceList.map(({ id, ...rest }) => ({
+        ...rest,
+        // ✅ \n aur extra spaces remove karo
+        workSummery: rest.workSummery
+          ?.replace(/\n/g, '')     // newlines remove
+          ?.replace(/\s+/g, ' ')   // multiple spaces single space
+          ?.trim() || ''
+      }))
     }
-    GlobalApi.updateResumeDetail(params?.resumeId, data).then(
-      (resp) => {
-        setLoading(false)
-        toast.success('Experience saved!')
-      },
-      (error) => {
-        setLoading(false)
-        toast.error('Failed to save')
-      }
-    )
   }
+
+  GlobalApi.updateResumeDetail(params?.resumeId, data).then(
+    (resp) => {
+      setLoading(false)
+      enableNext(true)
+      toast.success('Experience saved!')
+    },
+    (error) => {
+      setLoading(false)
+      enableNext(false)
+      console.log("Error:", error?.response?.data)
+      toast.error('Failed to save')
+    }
+  )
+}
 
   return (
     <div>
@@ -153,7 +168,6 @@ function Experience() {
             </div>
 
             <div className='col-span-2'>
-              {/* ✅ positionTitle prop added */}
               <RichTextEditor
                 index={index}
                 defaultValue={item?.workSummery}

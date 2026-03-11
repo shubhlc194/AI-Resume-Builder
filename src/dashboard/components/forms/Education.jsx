@@ -6,21 +6,21 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { LoaderCircle } from 'lucide-react';
 
-export default function Education() {
+const emptyEntry = {
+  UniversityName: '',
+  degree: '',
+  Major: '',
+  startDate: '',
+  endDate: '',
+  Description: '',
+}
+
+export default function Education({ enableNext }) {
   const [loading, setLoading] = useState(false)
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
   const params = useParams()
 
-  const [educationalList, setEducationalList] = useState([
-    {
-      universityName: '',
-      degree: '',
-      Major: '',
-      startDate: '',
-      endDate: '',
-      Description: '',
-    },
-  ]);
+  const [educationalList, setEducationalList] = useState([{ ...emptyEntry }])
 
   const handleChange = (e, index) => {
     const { name, value } = e.target
@@ -28,46 +28,48 @@ export default function Education() {
     newList[index] = { ...newList[index], [name]: value }
     setEducationalList(newList)
     setResumeInfo({ ...resumeInfo, education: newList })
-  };
+    enableNext(false)
+  }
 
   const addEntry = () =>
-    setEducationalList([
-      ...educationalList,
-      { universityName: '', degree: '', Major: '', startDate: '', endDate: '', Description: '' },
-    ]);
+    setEducationalList([...educationalList, { ...emptyEntry }]) // ✅ consistent
 
   const removeEntry = (index) => {
     const newList = educationalList.filter((_, i) => i !== index)
     setEducationalList(newList)
     setResumeInfo({ ...resumeInfo, education: newList })
+    enableNext(false)
   }
 
   const onSave = () => {
     setLoading(true)
     const data = {
       data: {
-        education: educationalList.map(({ id, ...rest }) => rest)
+        education: educationalList.map(({ id, ...rest }) => rest) // ✅ lowercase
       }
     }
     GlobalApi.updateResumeDetail(params?.resumeId, data).then(
       (resp) => {
         setLoading(false)
+        enableNext(true)
         toast.success('Education saved!')
       },
       (error) => {
         setLoading(false)
+        enableNext(false)
+        console.log("Error:", error?.response?.data?.error)
         toast.error('Failed to save')
       }
     )
   }
 
   const fields = [
-    { label: 'University Name', name: 'universityName', type: 'text',  colSpan: 2 },
+    { label: 'University Name', name: 'UniversityName', type: 'text',  colSpan: 2 },
     { label: 'Degree',          name: 'degree',         type: 'text',  colSpan: 1 },
     { label: 'Major',           name: 'Major',          type: 'text',  colSpan: 1 },
     { label: 'Start Date',      name: 'startDate',      type: 'month', colSpan: 1 },
     { label: 'End Date',        name: 'endDate',        type: 'month', colSpan: 1 },
-  ];
+  ]
 
   return (
     <div className="bg-white rounded-xl shadow-md border-t-4 border-purple-500 p-6 mt-6 hover:shadow-lg transition">
@@ -85,7 +87,6 @@ export default function Education() {
                 Remove
               </button>
             )}
-
             <div className="grid grid-cols-2 gap-4">
               {fields.map(({ label, name, type, colSpan }) => (
                 <div key={name} className={colSpan === 2 ? 'col-span-2' : 'col-span-1'}>
@@ -99,7 +100,6 @@ export default function Education() {
                   />
                 </div>
               ))}
-
               <div className="col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <Textarea
@@ -116,23 +116,15 @@ export default function Education() {
       </div>
 
       <div className='flex justify-between mt-4'>
-        <button
-          type='button'
-          onClick={addEntry}
-          className='text-purple-600 border border-purple-400 px-4 py-1 rounded text-sm hover:bg-purple-50'
-        >
+        <button type='button' onClick={addEntry}
+          className='text-purple-600 border border-purple-400 px-4 py-1 rounded text-sm hover:bg-purple-50'>
           + Add Another Education
         </button>
-
-        <button
-          type='button'
-          onClick={onSave}
-          disabled={loading}
-          className='bg-purple-600 text-white px-4 py-1 rounded text-sm hover:bg-purple-700 flex items-center gap-2'
-        >
+        <button type='button' onClick={onSave} disabled={loading}
+          className='bg-purple-600 text-white px-4 py-1 rounded text-sm hover:bg-purple-700 flex items-center gap-2'>
           {loading ? <LoaderCircle className='animate-spin h-4 w-4' /> : 'Save'}
         </button>
       </div>
     </div>
-  );
+  )
 }
