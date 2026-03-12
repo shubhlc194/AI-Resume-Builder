@@ -8,7 +8,7 @@ function EducationalPreview({resumeInfo}) {
       >Education</h2>
       <hr style={{ borderColor: resumeInfo?.themeColor }} />
 
-      {resumeInfo?.education.map((education, index) => (
+      {resumeInfo?.education?.map((education, index) => (
         <div key={index} className='my-5'>
           <h2 className='text-sm font-bold'
             style={{ color: resumeInfo?.themeColor }}
@@ -20,7 +20,7 @@ function EducationalPreview({resumeInfo}) {
             <span>{education?.startDate} - {education?.endDate}</span>
           </h2>
           <p className='text-xs my-2'>
-            {education?.Description}  {/* ✅ Capital D */}
+            {education?.Description}
           </p>
         </div>
       ))}

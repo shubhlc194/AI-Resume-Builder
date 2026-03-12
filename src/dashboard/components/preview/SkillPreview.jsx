@@ -1,9 +1,11 @@
 import React from "react";
 
 function SkillsPreview({ resumeInfo }) {
-  if (!resumeInfo?.skills?.length) return null;
+  // ✅ Dono handle karo — lowercase aur capital
+  const skills = resumeInfo?.skills || resumeInfo?.Skills || [];
+  
+  if (!skills.length) return null;
 
-  // ✅ Auto detect: agar rating > 5 hai to already % format mein hai
   const getRatingPercent = (rating) => {
     if (!rating) return 0;
     return rating > 5 ? Math.min(rating, 100) : rating * 20;
@@ -24,18 +26,18 @@ function SkillsPreview({ resumeInfo }) {
       />
 
       <div className="grid grid-cols-2 gap-4 mt-4">
-        {resumeInfo.skills.map((skill, index) => (
+        {skills.map((skill, index) => ( // ✅ skills variable use karo
           <div key={index} className="space-y-1">
             <div className="flex justify-between text-xs font-medium">
               <span>{skill.name}</span>
-              <span>{getRatingPercent(skill.rating)}%</span> {/* ✅ */}
+              <span>{getRatingPercent(skill.rating)}%</span>
             </div>
 
             <div className="h-2 bg-gray-200 rounded overflow-hidden">
               <div
                 className="h-2 rounded transition-all duration-500"
                 style={{
-                  width: `${getRatingPercent(skill.rating)}%`, // ✅
+                  width: `${getRatingPercent(skill.rating)}%`,
                   backgroundColor: resumeInfo.themeColor,
                 }}
               />

@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
 import SsoCallback from "./auth/sign-in/SsoCallback.jsx";
+import ViewResume from "./my-resume/resumeId/view/index.jsx";
 
 
 import App from "./App.jsx";
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
     path: "/auth/sign-in/sso-callback",
     element: <SsoCallback />,
   },
+  {
+  path: '/my-resume/:resumeId/view',
+  element: <ViewResume />
+}
 ]);
 
 

@@ -1,6 +1,6 @@
 import { Textarea } from '@/components/ui/textarea';
 import { ResumeInfoContext } from '@/context/ResumeInfoContext';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import GlobalApi from './../../../../service/GlobalApi';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -22,6 +22,12 @@ export default function Education({ enableNext }) {
 
   const [educationalList, setEducationalList] = useState([{ ...emptyEntry }])
 
+  useEffect(() => {
+    if (resumeInfo?.education?.length) {
+      setEducationalList(resumeInfo.education)
+    }
+  }, [resumeInfo])
+
   const handleChange = (e, index) => {
     const { name, value } = e.target
     const newList = [...educationalList]
@@ -32,7 +38,7 @@ export default function Education({ enableNext }) {
   }
 
   const addEntry = () =>
-    setEducationalList([...educationalList, { ...emptyEntry }]) // ✅ consistent
+    setEducationalList([...educationalList, { ...emptyEntry }])
 
   const removeEntry = (index) => {
     const newList = educationalList.filter((_, i) => i !== index)
@@ -45,11 +51,11 @@ export default function Education({ enableNext }) {
     setLoading(true)
     const data = {
       data: {
-        education: educationalList.map(({ id, ...rest }) => rest) // ✅ lowercase
+        education: educationalList.map(({ id, ...rest }) => rest)
       }
     }
     GlobalApi.updateResumeDetail(params?.resumeId, data).then(
-      (resp) => {
+      () => {
         setLoading(false)
         enableNext(true)
         toast.success('Education saved!')

@@ -5,18 +5,33 @@ import FormSection from "../../components/FormSection";
 import ResumePreview from "../../components/ResumePreview";
 
 import { ResumeInfoContext } from "@/context/ResumeInfoContext";
-import dummy from "@/data/dummy";
+import GlobalApi from "../../../../../service/GlobalApi";
 
 function EditResume() {
-  const params = useParams();
 
-  // ✅ correct state
-  const [resumeInfo, setResumeInfo] = useState(dummy);
+  const { resumeId } = useParams(); // this is documentId from URL
+
+  const [resumeInfo, setResumeInfo] = useState(null);
 
   useEffect(() => {
-    // later you will load resume using params.resumeid
-    console.log("Resume ID:", params.resumeid);
-  }, []);
+    if (resumeId) {
+      getResumeInfo();
+    }
+  }, [resumeId]);
+
+  const getResumeInfo = () => {
+
+    GlobalApi.GetResumeById(resumeId).then((resp) => {
+
+      const data = resp.data.data[0]; // because we used filter
+
+      console.log("Loaded Resume:", data);
+
+      setResumeInfo(data);
+
+    });
+
+  };
 
   return (
     <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>

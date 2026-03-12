@@ -1,5 +1,5 @@
 import RichTextEditor from '@/components/RichTextEditor'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import GlobalApi from './../../../../service/GlobalApi'
 import { useParams } from 'react-router-dom'
@@ -16,85 +16,75 @@ const formfield = {
   workSummery: ''
 }
 
-function Experience({ enableNext }) { 
+function Experience({ enableNext }) {
   const [experienceList, setExperienceList] = useState([formfield])
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
   const [loading, setLoading] = useState(false)
   const params = useParams()
 
+  useEffect(() => {
+    if (resumeInfo?.Experience?.length) {
+      setExperienceList(resumeInfo.Experience)
+    }
+  }, [resumeInfo])
+
   const handleChange = (index, e) => {
     const { name, value } = e.target
     const newList = [...experienceList]
-    newList[index] = {
-      ...newList[index],
-      [name]: value
-    }
+    newList[index] = { ...newList[index], [name]: value }
     setExperienceList(newList)
-    setResumeInfo({
-      ...resumeInfo,
-      experience: newList
-    })
-    enableNext(false) // ✅ re-lock on edit
+    setResumeInfo({ ...resumeInfo, Experience: newList })
+    enableNext(false)
   }
 
   const handleRichTextEditor = (value, name, index) => {
     const newList = [...experienceList]
-    newList[index] = {
-      ...newList[index],
-      [name]: value
-    }
+    newList[index] = { ...newList[index], [name]: value }
     setExperienceList(newList)
-    setResumeInfo({
-      ...resumeInfo,
-      experience: newList
-    })
-    enableNext(false) 
+    setResumeInfo({ ...resumeInfo, Experience: newList })
+    enableNext(false)
   }
 
   const addNewExperience = () => {
     setExperienceList([...experienceList, { ...formfield }])
-    enableNext(false) 
+    enableNext(false)
   }
 
   const removeExperience = (index) => {
     const newList = experienceList.filter((_, i) => i !== index)
     setExperienceList(newList)
-    setResumeInfo({
-      ...resumeInfo,
-      experience: newList
-    })
-    enableNext(false) // ✅ re-lock on remove
+    setResumeInfo({ ...resumeInfo, Experience: newList })
+    enableNext(false)
   }
 
- const onSave = () => {
-  setLoading(true)
-  const data = {
-    data: {
-      Experience: experienceList.map(({ id, ...rest }) => ({
-        ...rest,
-        // ✅ \n aur extra spaces remove karo
-        workSummery: rest.workSummery
-          ?.replace(/\n/g, '')     // newlines remove
-          ?.replace(/\s+/g, ' ')   // multiple spaces single space
-          ?.trim() || ''
-      }))
+  const onSave = () => {
+    setLoading(true)
+    const data = {
+      data: {
+        Experience: experienceList.map(({ id, ...rest }) => ({
+          ...rest,
+          workSummery: rest.workSummery
+            ?.replace(/\n/g, '')
+            ?.replace(/\s+/g, ' ')
+            ?.trim() || ''
+        }))
+      }
     }
-  }
 
-  GlobalApi.updateResumeDetail(params?.resumeId, data).then(
-    (resp) => {
-      setLoading(false)
-      enableNext(true)
-      toast.success('Experience saved!')
-    },
-    (error) => {
-      setLoading(false)
-      enableNext(false)
-      console.log("Error:", error?.response?.data)
-      toast.error('Failed to save')
-    }
-  )
-}
+    GlobalApi.updateResumeDetail(params?.resumeId, data).then(
+      () => {
+        setLoading(false)
+        enableNext(true)
+        toast.success('Experience saved!')
+      },
+      (error) => {
+        setLoading(false)
+        enableNext(false)
+        console.log("Error:", error?.response?.data)
+        toast.error('Failed to save')
+      }
+    )
+  }
 
   return (
     <div>

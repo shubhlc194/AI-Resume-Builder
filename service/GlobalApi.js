@@ -10,19 +10,30 @@ const axiosClient = axios.create({
   },
 });
 
-// ✅ create resume
+// Create Resume
 const CreateNewResume = (data) =>
   axiosClient.post("/user-resumes", data);
 
-// ✅ get all resumes
+// Get All Resumes
 const GetUserResumes = () =>
-  axiosClient.get("/user-resumes");
+  axiosClient.get("/user-resumes?populate=*");
 
-const updateResumeDetail = (id, data) => {
-  return axiosClient.put(`/user-resumes/${id}`, data);
+// Get Single Resume
+const GetResumeById = (documentId) =>
+  axiosClient.get(`/user-resumes?filters[documentId][$eq]=${documentId}&populate=*`);
+
+// Update Resume
+// Update Resume - use documentId for Strapi v5
+const updateResumeDetail = (documentId, data) => {
+  console.log("Updating resume with documentId:", documentId);
+  return axiosClient.put(`/user-resumes/${documentId}`, data);
 };
+const DeleteResume = (documentId) =>
+  axiosClient.delete(`/user-resumes/${documentId}`)
 export default {
   CreateNewResume,
   GetUserResumes,
-  updateResumeDetail
+  GetResumeById,
+  updateResumeDetail,
+  DeleteResume,
 };

@@ -13,7 +13,8 @@ function ProfessionalExperiencePreview({resumeInfo}) {
 
       <hr style={{ borderColor: resumeInfo?.themeColor }}/>
 
-      {resumeInfo?.experience?.map((experience, index) => (
+      {/* ✅ Capital E — Strapi se aisa hi aa raha hai */}
+      {resumeInfo?.Experience?.map((experience, index) => (
 
         <div key={index} className='my-5'>
 
@@ -22,17 +23,16 @@ function ProfessionalExperiencePreview({resumeInfo}) {
           </h2>
 
           <h2 className='text-xs flex justify-between'>
-            {experience?.companyName},{experience?.state},{experience?.city}
-
+            {experience?.companyName},{experience?.city},{experience?.state}
             <span>
-              {experience?.startDate}To {experience?.currentlyWorking ? "Present" : experience?.endDate}
+              {experience?.startDate} To {experience?.currentlyWorking ? "Present" : experience?.endDate}
             </span>
           </h2>
 
           <div
-  className='text-xs my-2 [&>ul]:list-disc [&>ul]:ml-4 [&>li]:ml-4'
-  dangerouslySetInnerHTML={{ __html: experience?.workSummery || "" }}
-/>
+            className='text-xs my-2 [&>ul]:list-disc [&>ul]:ml-4 [&>li]:ml-4'
+            dangerouslySetInnerHTML={{ __html: experience?.workSummery || "" }}
+          />
 
         </div>
 

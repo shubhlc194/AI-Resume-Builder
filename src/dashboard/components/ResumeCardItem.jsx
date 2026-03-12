@@ -1,9 +1,29 @@
-import { FileText, Pencil, Trash2, Eye } from "lucide-react";
+import { FileText, Pencil, Trash2, Eye, MoreVertical } from "lucide-react";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import GlobalApi from "../../../service/GlobalApi";
+import { toast } from "sonner";
 
 const ResumeCardItem = ({ resume, refreshData }) => {
-  const [hovered, setHovered] = useState(false);
+  const [hovered, setHovered] = useState(false)
+  const navigate = useNavigate()
+
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this resume?")) return
+    try {
+      await GlobalApi.DeleteResume(resume.documentId)
+      toast.success("Resume deleted!")
+      refreshData()
+    } catch (err) {
+      toast.error("Failed to delete")
+    }
+  }
 
   return (
     <div
@@ -27,7 +47,6 @@ const ResumeCardItem = ({ resume, refreshData }) => {
           overflow-hidden
           relative
         ">
-          {/* Top accent bar */}
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-400 to-violet-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -39,28 +58,48 @@ const ResumeCardItem = ({ resume, refreshData }) => {
               Click to edit
             </p>
           </div>
-
-          {/* Hover overlay actions */}
-          <div className="absolute bottom-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-            <div className="w-8 h-8 bg-white rounded-xl shadow flex items-center justify-center hover:bg-purple-50">
-              <Pencil size={13} className="text-purple-600" />
-            </div>
-            <div className="w-8 h-8 bg-white rounded-xl shadow flex items-center justify-center hover:bg-purple-50">
-              <Eye size={13} className="text-purple-600" />
-            </div>
-          </div>
         </div>
       </Link>
 
-      {/* Title */}
-      <div className="mt-3 px-1">
-        <p className="text-sm font-semibold text-gray-700 truncate group-hover:text-purple-600 transition">
-          {resume.title || 'Untitled'}
-        </p>
-        <p className="text-xs text-gray-400 mt-0.5">Resume</p>
+      {/* Title + Dropdown */}
+      <div className="mt-3 px-1 flex items-center justify-between">
+        <div className="overflow-hidden">
+          <p className="text-sm font-semibold text-gray-700 truncate group-hover:text-purple-600 transition">
+            {resume.title || 'Untitled'}
+          </p>
+          <p className="text-xs text-gray-400 mt-0.5">Resume</p>
+        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="p-1 rounded-lg hover:bg-purple-50 transition">
+              <MoreVertical size={16} className="text-gray-400 hover:text-purple-600" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuItem
+              onClick={() => navigate(`/dashboard/resume/${resume.documentId}/edit`)}
+              className="gap-2 cursor-pointer"
+            >
+              <Pencil size={14} /> Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigate(`/my-resume/${resume.documentId}/view`)}
+              className="gap-2 cursor-pointer"
+            >
+              <Eye size={14} /> View
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleDelete}
+              className="gap-2 cursor-pointer text-red-500 focus:text-red-500"
+            >
+              <Trash2 size={14} /> Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ResumeCardItem;
+export default ResumeCardItem

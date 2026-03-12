@@ -1,72 +1,90 @@
-import { Input } from '@/components/ui/input';
-import React, { useContext, useState } from 'react'
+import { Input } from '@/components/ui/input'
+import React, { useContext, useState, useEffect } from 'react'
 import { Rating } from '@smastrom/react-rating'
 import '@smastrom/react-rating/style.css'
-import { ResumeInfoContext } from '@/context/ResumeInfoContext';
-import GlobalApi from './../../../../service/GlobalApi';
-import { useParams } from 'react-router-dom';
-import { toast } from 'sonner';
-import { LoaderCircle } from 'lucide-react';
+import { ResumeInfoContext } from '@/context/ResumeInfoContext'
+import GlobalApi from './../../../../service/GlobalApi'
+import { toast } from 'sonner'
+import { LoaderCircle } from 'lucide-react'
 
 function Skill({ enableNext }) {
+
   const [skillList, setSkillList] = useState([{ name: '', rating: 0 }])
   const [loading, setLoading] = useState(false)
+
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
-  const params = useParams()
+
+  const resumeId = resumeInfo?.documentId
+
+  useEffect(() => {
+    if (resumeInfo?.Skills?.length) {
+      setSkillList(resumeInfo.Skills)
+    }
+  }, [resumeInfo])
 
   const handleChange = (index, name, value) => {
     const newList = [...skillList]
     newList[index] = { ...newList[index], [name]: value }
     setSkillList(newList)
-    setResumeInfo({ ...resumeInfo, skills: newList })
-    enableNext(false) 
+    setResumeInfo({ ...resumeInfo, Skills: newList })
+    enableNext(false)
   }
 
-  const addSkill = () => setSkillList([...skillList, { name: '', rating: 0 }])
+  const addSkill = () => {
+    setSkillList([...skillList, { name: '', rating: 0 }])
+  }
 
   const removeSkill = (index) => {
     const newList = skillList.filter((_, i) => i !== index)
     setSkillList(newList)
-    setResumeInfo({ ...resumeInfo, skills: newList })
+    setResumeInfo({ ...resumeInfo, Skills: newList })
     enableNext(false)
   }
 
   const onSave = () => {
+    if (!resumeId) {
+      toast.error("Resume not loaded yet")
+      return
+    }
+
     setLoading(true)
+
     const data = {
       data: {
-        skills: skillList.map(({ id, ...rest }) => rest)
+        Skills: skillList.map(({ id, __component, ...rest }) => rest)
       }
     }
-    GlobalApi.updateResumeDetail(params?.resumeId, data).then(
-      (resp) => {
+
+    GlobalApi.updateResumeDetail(resumeId, data)
+      .then(() => {
         setLoading(false)
-        enableNext(true) 
-        toast.success('Skills saved!')
-      },
-      (error) => {
+        enableNext(true)
+        toast.success("Skills saved!")
+      })
+      .catch((error) => {
         setLoading(false)
         enableNext(false)
-        console.log("Error:", error?.response?.data?.error)
-        toast.error('Failed to save')
-      }
-    )
+        console.error("Full error:", JSON.stringify(error?.response?.data, null, 2))
+        toast.error("Failed to save")
+      })
   }
 
   return (
     <div>
       <div className="bg-white rounded-xl shadow-md border-t-4 border-purple-500 p-6 mt-6 hover:shadow-lg transition">
+
         <h2 className="font-semibold text-lg text-gray-800">Skills</h2>
         <p className="text-sm text-gray-500 mt-1">Add Your Top Professional Skills</p>
 
         <div className='mt-4 space-y-3'>
           {skillList.map((item, index) => (
             <div key={index} className='flex items-center gap-4 border p-3 rounded-lg'>
+
               <div className='flex-1'>
                 <label className='text-xs'>Name</label>
                 <Input
                   value={item.name}
-                  onChange={(e) => handleChange(index, 'name', e.target.value)} // ✅ onChange fix
+                  onChange={(e) => handleChange(index, 'name', e.target.value)}
                 />
               </div>
 
@@ -74,8 +92,8 @@ function Skill({ enableNext }) {
                 <label className='text-xs block mb-1'>Rating</label>
                 <Rating
                   style={{ maxWidth: 150 }}
-                  value={item.rating}          // ✅ item.rating use karo
-                  onChange={(val) => handleChange(index, 'rating', val)} // ✅ per-item rating
+                  value={item.rating || 0}
+                  onChange={(val) => handleChange(index, 'rating', val)}
                 />
               </div>
 
@@ -87,6 +105,7 @@ function Skill({ enableNext }) {
                   Remove
                 </button>
               )}
+
             </div>
           ))}
         </div>
@@ -107,6 +126,7 @@ function Skill({ enableNext }) {
             {loading ? <LoaderCircle className='animate-spin h-4 w-4' /> : 'Save'}
           </button>
         </div>
+
       </div>
     </div>
   )

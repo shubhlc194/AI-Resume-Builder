@@ -7,20 +7,25 @@ import EducationalPreview from "@/dashboard/components/preview/EducationalPrevie
 import SkillPreview from "@/dashboard/components/preview/SkillPreview";
 
 function ResumePreview() {
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const { resumeInfo } = useContext(ResumeInfoContext);
+
   return (
     <div
-      className="shadow-lg h-full p-14 border-t-[20px] bg-white"
+      id="resume-preview"
+      className="shadow-lg bg-white border-t-[20px] w-full"
       style={{
         borderColor: resumeInfo?.themeColor,
+        minHeight: '297mm',
+        padding: '10mm 14mm',
+        boxSizing: 'border-box',
+        fontSize: '12px',
       }}
     >
-      {/* personal details */}
       <PersonalDetailPreview resumeInfo={resumeInfo} />
-      <SummaryPreview resumeInfo={resumeInfo}/>
-      <ProfessionalExperiencePreview resumeInfo={resumeInfo}/>
-      <EducationalPreview resumeInfo={resumeInfo}/>
-      <SkillPreview resumeInfo={resumeInfo}/>
+      <SummaryPreview resumeInfo={resumeInfo} />
+      <ProfessionalExperiencePreview resumeInfo={resumeInfo} />
+      <EducationalPreview resumeInfo={resumeInfo} />
+      <SkillPreview resumeInfo={resumeInfo} />
     </div>
   );
 }
