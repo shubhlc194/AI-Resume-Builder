@@ -5,10 +5,11 @@ import { ArrowLeft, ArrowRight, LayoutGridIcon } from "lucide-react";
 import Summery from "@/dashboard/components/forms/Summery";
 import Experience from "@/dashboard/components/forms/Experience";
 import Education from "@/dashboard/components/forms/Education";
+import Skill from "@/dashboard/components/forms/Skill";
 
 function FormSection() {
   const [activeFormIndex, setActiveFormIndex] = useState(1);
-  const [nextEnabled, setNextEnabled] = useState(false); // ✅ track save state
+  const [nextEnabled, setNextEnabled] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -31,9 +32,9 @@ function FormSection() {
 
           <Button
             size="sm"
-            disabled={!nextEnabled} // ✅ disabled until saved
+            // disabled={!nextEnabled} // 🚧 DEV: re-enable in production
             onClick={() => {
-              setNextEnabled(false); // ✅ reset for next step
+              setNextEnabled(false);
               setActiveFormIndex(activeFormIndex + 1);
             }}
             className="flex items-center gap-2"
@@ -55,6 +56,9 @@ function FormSection() {
       )}
       {activeFormIndex === 4 && (
         <Education enableNext={(val) => setNextEnabled(val)} />
+      )}
+      {activeFormIndex === 5 && (
+        <Skill enableNext={(val) => setNextEnabled(val)} />
       )}
     </div>
   );
