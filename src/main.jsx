@@ -5,7 +5,6 @@ import { ClerkProvider } from "@clerk/clerk-react";
 import SsoCallback from "./auth/sign-in/SsoCallback.jsx";
 import ViewResume from "./my-resume/resumeId/view/index.jsx";
 
-
 import App from "./App.jsx";
 import "./index.css";
 
@@ -13,6 +12,7 @@ import SignInPage from "./auth/sign-in/SignInPage.jsx";
 import Home from "./home/index.jsx";
 import DashBoard from "./dashboard/index.jsx";
 import EditResume from "./dashboard/resume/[resumeid]/edit/index.jsx";
+
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 if (!PUBLISHABLE_KEY) {
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
         element: <DashBoard />,
       },
       {
-         path: "/dashboard/resume/:resumeId/edit",
+        path: "/dashboard/resume/:resumeId/edit",
         element: <EditResume />,
       },
     ],
@@ -46,11 +46,10 @@ const router = createBrowserRouter([
     element: <SsoCallback />,
   },
   {
-  path: '/my-resume/:resumeId/view',
-  element: <ViewResume />
-}
+    path: "/my-resume/:resumeId/view",
+    element: <ViewResume />,
+  },
 ]);
-
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
