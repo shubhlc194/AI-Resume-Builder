@@ -3,6 +3,12 @@ import React from "react";
 function SkillsPreview({ resumeInfo }) {
   if (!resumeInfo?.skills?.length) return null;
 
+  // ✅ Auto detect: agar rating > 5 hai to already % format mein hai
+  const getRatingPercent = (rating) => {
+    if (!rating) return 0;
+    return rating > 5 ? Math.min(rating, 100) : rating * 20;
+  };
+
   return (
     <div className="my-6">
       <h2
@@ -22,14 +28,14 @@ function SkillsPreview({ resumeInfo }) {
           <div key={index} className="space-y-1">
             <div className="flex justify-between text-xs font-medium">
               <span>{skill.name}</span>
-              <span>{skill.rating * 20}%</span> {/* ✅ 0-5 → 0-100% */}
+              <span>{getRatingPercent(skill.rating)}%</span> {/* ✅ */}
             </div>
 
-            <div className="h-2 bg-gray-200 rounded">
+            <div className="h-2 bg-gray-200 rounded overflow-hidden">
               <div
                 className="h-2 rounded transition-all duration-500"
                 style={{
-                  width: `${skill.rating * 20}%`, // ✅ 0-5 → 0-100%
+                  width: `${getRatingPercent(skill.rating)}%`, // ✅
                   backgroundColor: resumeInfo.themeColor,
                 }}
               />

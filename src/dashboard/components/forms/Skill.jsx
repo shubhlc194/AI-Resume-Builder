@@ -19,7 +19,7 @@ function Skill({ enableNext }) {
     newList[index] = { ...newList[index], [name]: value }
     setSkillList(newList)
     setResumeInfo({ ...resumeInfo, skills: newList })
-    enableNext(false) // ✅ re-lock on edit
+    enableNext(false) 
   }
 
   const addSkill = () => setSkillList([...skillList, { name: '', rating: 0 }])
@@ -41,7 +41,7 @@ function Skill({ enableNext }) {
     GlobalApi.updateResumeDetail(params?.resumeId, data).then(
       (resp) => {
         setLoading(false)
-        enableNext(true) // ✅ unlock on success
+        enableNext(true) 
         toast.success('Skills saved!')
       },
       (error) => {
