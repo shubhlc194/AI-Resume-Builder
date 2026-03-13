@@ -19,8 +19,8 @@ const SignInPage = () => {
         <SignIn
           routing="path"
           path="/auth/sign-in"
-          signUpUrl="/auth/sign-up"
-          redirectUrl="/"
+          forceRedirectUrl="/dashboard"
+          fallbackRedirectUrl="/dashboard"
         />
 
       </div>
