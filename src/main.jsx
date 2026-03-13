@@ -2,17 +2,22 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
-import SsoCallback from "./auth/sign-in/SsoCallback.jsx";
-import ViewResume from "./my-resume/resumeId/view/index.jsx";
+
 import App from "./App.jsx";
 import "./index.css";
-import SignInPage from "./auth/sign-in/SignInPage.jsx";
+
 import Home from "./home/index.jsx";
 import DashBoard from "./dashboard/index.jsx";
 import EditResume from "./dashboard/resume/[resumeid]/edit/index.jsx";
+import ViewResume from "./my-resume/resumeId/view/index.jsx";
+import SignInPage from "./auth/sign-in/SignInPage.jsx";
+import SsoCallback from "./auth/sign-in/SsoCallback.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-if (!PUBLISHABLE_KEY) throw new Error("Missing Clerk Publishable Key");
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Clerk Publishable Key");
+}
 
 const router = createBrowserRouter([
   {
@@ -30,7 +35,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      afterSignInUrl="/dashboard"
+      afterSignUpUrl="/dashboard"
+    >
       <RouterProvider router={router} />
     </ClerkProvider>
   </React.StrictMode>
