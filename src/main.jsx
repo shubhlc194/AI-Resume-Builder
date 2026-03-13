@@ -42,6 +42,14 @@ const router = createBrowserRouter([
     element: <SignInPage />,
   },
   {
+  path: "/auth/sign-in/sso-callback",
+  element: <SsoCallback />,
+},
+{
+  path: "/auth/sign-in/continue",  // ← ye add karo
+  element: <SignInPage />,
+},
+  {
     path: "/auth/sign-in/sso-callback",
     element: <SsoCallback />,
   },
