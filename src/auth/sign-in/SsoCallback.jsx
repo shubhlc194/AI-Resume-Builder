@@ -1,7 +1,12 @@
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 
 const SsoCallback = () => {
-  return <AuthenticateWithRedirectCallback />;
+  return (
+    <AuthenticateWithRedirectCallback
+      afterSignInUrl="/dashboard"
+      afterSignUpUrl="/dashboard"
+    />
+  );
 };
 
 export default SsoCallback;

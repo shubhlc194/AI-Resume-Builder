@@ -4,64 +4,34 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
 import SsoCallback from "./auth/sign-in/SsoCallback.jsx";
 import ViewResume from "./my-resume/resumeId/view/index.jsx";
-
 import App from "./App.jsx";
 import "./index.css";
-
 import SignInPage from "./auth/sign-in/SignInPage.jsx";
 import Home from "./home/index.jsx";
 import DashBoard from "./dashboard/index.jsx";
 import EditResume from "./dashboard/resume/[resumeid]/edit/index.jsx";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
-
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Clerk Publishable Key");
-}
+if (!PUBLISHABLE_KEY) throw new Error("Missing Clerk Publishable Key");
 
 const router = createBrowserRouter([
   {
     element: <App />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      {
-        path: "/dashboard",
-        element: <DashBoard />,
-      },
-      {
-        path: "/dashboard/resume/:resumeId/edit",
-        element: <EditResume />,
-      },
+      { path: "/", element: <Home /> },
+      { path: "/dashboard", element: <DashBoard /> },
+      { path: "/dashboard/resume/:resumeId/edit", element: <EditResume /> },
     ],
   },
-  {
-    path: "/auth/sign-in",
-    element: <SignInPage />,
-  },
-  {
-  path: "/auth/sign-in/sso-callback",
-  element: <SsoCallback />,
-},
-{
-  path: "/auth/sign-in/continue",  // ← ye add karo
-  element: <SignInPage />,
-},
-  {
-    path: "/auth/sign-in/sso-callback",
-    element: <SsoCallback />,
-  },
-  {
-    path: "/my-resume/:resumeId/view",
-    element: <ViewResume />,
-  },
+  { path: "/auth/sign-in", element: <SignInPage /> },
+  { path: "/auth/sign-in/continue", element: <SsoCallback /> }, // SsoCallback, SignInPage nahi!
+  { path: "/auth/sign-in/sso-callback", element: <SsoCallback /> },
+  { path: "/my-resume/:resumeId/view", element: <ViewResume /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ClerkProvider 
+    <ClerkProvider
       publishableKey={PUBLISHABLE_KEY}
       afterSignInUrl="/dashboard"
       afterSignUpUrl="/dashboard"
