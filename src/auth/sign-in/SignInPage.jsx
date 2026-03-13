@@ -1,6 +1,13 @@
-import { SignIn } from "@clerk/clerk-react";
+import { SignIn, useUser } from "@clerk/clerk-react";
+import { Navigate } from "react-router-dom";
 
 const SignInPage = () => {
+  const { isSignedIn, isLoaded } = useUser();
+
+  if (isLoaded && isSignedIn) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-violet-50">
       <div className="w-full max-w-md p-6 rounded-2xl bg-white shadow-xl border border-gray-200">
@@ -11,7 +18,8 @@ const SignInPage = () => {
           Sign in to continue building your AI-powered resume
         </p>
         <SignIn
-          routing="hash"
+          routing="path"
+          path="/auth/sign-in"
           fallbackRedirectUrl="/dashboard"
           signUpFallbackRedirectUrl="/dashboard"
         />
