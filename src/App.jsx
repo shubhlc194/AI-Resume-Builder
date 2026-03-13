@@ -8,7 +8,6 @@ function App() {
 
   if (!isLoaded) return <div>Loading...</div>;
 
-  // 🔒 redirect if not logged in
   if (!isSignedIn) {
     return <Navigate to="/auth/sign-in" replace />;
   }
@@ -17,7 +16,7 @@ function App() {
     <>
       <Header />
       <Outlet />
-      <Toaster/>
+      <Toaster />
     </>
   );
 }
