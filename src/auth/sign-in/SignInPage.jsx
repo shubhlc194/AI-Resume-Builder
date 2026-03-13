@@ -11,8 +11,7 @@ const SignInPage = () => {
           Sign in to continue building your AI-powered resume
         </p>
         <SignIn
-          routing="path"
-          path="/auth/sign-in"
+          routing="hash"
           fallbackRedirectUrl="/dashboard"
           signUpFallbackRedirectUrl="/dashboard"
         />
