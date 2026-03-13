@@ -6,6 +6,8 @@ import { Toaster } from "sonner";
 function App() {
   const { isLoaded, isSignedIn } = useUser();
 
+  console.log("App render - isLoaded:", isLoaded, "isSignedIn:", isSignedIn);
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
