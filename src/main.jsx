@@ -24,7 +24,6 @@ const router = createBrowserRouter([
     ],
   },
   { path: "/auth/sign-in", element: <SignInPage /> },
-  { path: "/auth/sign-in/continue", element: <SsoCallback /> }, // SsoCallback, SignInPage nahi!
   { path: "/auth/sign-in/sso-callback", element: <SsoCallback /> },
   { path: "/my-resume/:resumeId/view", element: <ViewResume /> },
 ]);
@@ -32,7 +31,7 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-  <RouterProvider router={router} />
-</ClerkProvider>
+      <RouterProvider router={router} />
+    </ClerkProvider>
   </React.StrictMode>
 );
