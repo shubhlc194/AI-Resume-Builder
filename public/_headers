@@ -1,2 +1,0 @@
-/*
-  Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.accounts.dev https://*.clerk.accounts.dev https://challenges.cloudflare.com https://clerk.ai-resume-builder-328.pages.dev blob:; worker-src blob:; script-src-elem 'self' 'unsafe-inline' https://clerk.accounts.dev https://*.clerk.accounts.dev https://challenges.cloudflare.com https://clerk.ai-resume-builder-328.pages.dev blob:;
